@@ -175,6 +175,41 @@ async function handleGoogleCallback(code) {
   };
 }
 
+/**
+ * Lấy thông tin user hiện tại.
+ */
+async function getMe(userId) {
+  const [rows] = await pool.query(
+    'SELECT id, name, email, avatar, role, created_at FROM users WHERE id = ?',
+    [userId],
+  );
+  if (rows.length === 0) throw new AppError('User not found', 404);
+  return rows[0];
+}
+
+/**
+ * Cập nhật thông tin user (name, email).
+ */
+async function updateMe(userId, data) {
+  const fields = [];
+  const values = [];
+
+  if (data.name !== undefined) { fields.push('name = ?'); values.push(data.name); }
+  if (data.email !== undefined) {
+    // Kiểm tra email chưa bị dùng bởi user khác
+    const [existing] = await pool.query('SELECT id FROM users WHERE email = ? AND id != ?', [data.email, userId]);
+    if (existing.length > 0) throw new AppError('Email already in use', 409);
+    fields.push('email = ?'); values.push(data.email);
+  }
+
+  if (fields.length === 0) throw new AppError('No fields to update', 400);
+
+  values.push(userId);
+  await pool.query(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
+
+  return getMe(userId);
+}
+
 module.exports = {
-  register, login, getGoogleAuthUrl, handleGoogleCallback,
+  register, login, getGoogleAuthUrl, handleGoogleCallback, getMe, updateMe,
 };

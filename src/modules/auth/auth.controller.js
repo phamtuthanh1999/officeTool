@@ -50,6 +50,17 @@ const googleCallback = catchAsync(async (req, res) => {
   return res.redirect(`${frontendUrl}/auth/callback?${params.toString()}`);
 });
 
+const getMe = catchAsync(async (req, res) => {
+  const user = await authService.getMe(req.user.id);
+  sendSuccess(res, 200, { user });
+});
+
+const updateMe = catchAsync(async (req, res) => {
+  const { name, email } = req.body;
+  const user = await authService.updateMe(req.user.id, { name, email });
+  sendSuccess(res, 200, { user });
+});
+
 module.exports = {
-  register, login, googleLogin, googleCallback,
+  register, login, googleLogin, googleCallback, getMe, updateMe,
 };

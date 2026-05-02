@@ -161,4 +161,48 @@ router.get('/google', authController.googleLogin);
  */
 router.get('/google/callback', authController.googleCallback);
 
+// ── Protected routes ───────────────────────────────────────────────────────────
+const { protect } = require('../../middlewares/auth.middleware');
+
+/**
+ * @openapi
+ * /api/v1/auth/me:
+ *   get:
+ *     tags: [Auth]
+ *     summary: Lấy thông tin user hiện tại
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Thông tin user
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/me', protect, authController.getMe);
+
+/**
+ * @openapi
+ * /api/v1/auth/me:
+ *   patch:
+ *     tags: [Auth]
+ *     summary: Cập nhật thông tin user
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name: { type: string }
+ *               email: { type: string, format: email }
+ *     responses:
+ *       200:
+ *         description: Cập nhật thành công
+ *       409:
+ *         description: Email already in use
+ */
+router.patch('/me', protect, authController.updateMe);
+
 module.exports = router;
