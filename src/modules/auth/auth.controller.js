@@ -33,7 +33,7 @@ const googleLogin = catchAsync(async (req, res) => {
 const googleCallback = catchAsync(async (req, res) => {
   const { code, error } = req.query;
   const env = require('../../config/env');
-  const frontendUrl = env.FRONTEND_URL || 'http://localhost:3001';
+  const frontendUrl = (env.FRONTEND_URL || 'http://localhost:3001').replace(/\/+$/, '');
 
   // User bấm "Cancel" trên trang Google
   if (error) {
