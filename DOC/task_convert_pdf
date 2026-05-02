@@ -1,0 +1,70 @@
+Bạn hãy xây dựng chức năng “Chuyển đổi ảnh sang PDF (Image to PDF)” cho một web app.
+
+## 🎯 Mục tiêu
+
+* Nhận 1 hoặc nhiều ảnh (jpg/png)
+* Chuyển thành 1 file PDF
+* Trả về file PDF cho client
+
+---
+
+## 🔁 Luồng xử lý
+
+1. Nhận file ảnh từ client (có thể nhiều file)
+2. Validate:
+
+   * Định dạng hợp lệ (jpg, png)
+   * Kích thước mỗi file < 5MB
+3. Sắp xếp ảnh theo thứ tự upload
+4. Tạo file PDF:
+
+   * Mỗi ảnh là 1 trang
+   * Giữ tỉ lệ ảnh (không méo)
+   * Canh giữa ảnh trong trang
+5. Xuất file PDF
+6. Trả file PDF về cho client
+
+---
+
+## ⚙️ Yêu cầu
+
+* Viết đầy đủ logic xử lý
+* Tách rõ các bước:
+
+  * nhận file
+  * validate
+  * xử lý convert
+  * trả kết quả
+* Có xử lý lỗi:
+
+  * file không hợp lệ
+  * không có file
+  * lỗi khi tạo PDF
+* Code rõ ràng, có comment
+
+---
+
+## 📤 Output
+
+* Hàm hoặc API hoàn chỉnh:
+
+  * nhận nhiều ảnh
+  * convert thành PDF
+  * trả file PDF
+* Có ví dụ input / output
+
+---
+
+## ⚡ Tối ưu (nếu có thể)
+
+* Nén ảnh trước khi đưa vào PDF (giảm dung lượng)
+* Giới hạn số lượng ảnh (ví dụ: max 20 ảnh)
+* Xử lý async nếu nhiều ảnh
+
+---
+
+## ❗ Lưu ý
+
+
+
+Hãy viết code đơn giản nhưng thực tế, có thể chạy được.

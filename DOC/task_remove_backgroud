@@ -1,0 +1,58 @@
+Bạn hãy xây dựng chức năng “Xóa nền ảnh (Remove Background)” cho một web app.
+
+## 🎯 Mục tiêu
+
+* Nhận 1 ảnh đầu vào (jpg/png)
+* Xử lý xóa nền
+* Trả về ảnh PNG nền trong suốt
+
+---
+
+## 🔁 Luồng xử lý
+
+1. Nhận file ảnh từ client
+2. Validate:
+
+   * Đúng định dạng (jpg, png)
+   * Kích thước hợp lệ (<5MB)
+3. Gửi ảnh đến service xử lý xóa nền (API hoặc model)
+4. Nhận kết quả là ảnh đã xóa nền (PNG)
+5. Trả kết quả về cho client
+
+---
+
+## ⚙️ Yêu cầu
+
+* Viết đầy đủ logic xử lý
+* Có tách rõ các bước:
+
+  * nhận file
+  * validate
+  * xử lý ảnh
+  * trả kết quả
+* Có xử lý lỗi:
+
+  * file không hợp lệ
+  * lỗi khi xử lý ảnh
+* Code rõ ràng, có comment
+
+---
+
+## 📤 Output
+
+* Hàm hoặc API hoàn chỉnh để:
+
+  * nhận ảnh
+  * xử lý
+  * trả ảnh đã xóa nền
+* Có ví dụ input / output
+
+---
+
+## ❗ Lưu ý
+
+*  cần database
+*  cần authentication
+* Chỉ tập trung vào chức năng chính
+
+Hãy viết code đơn giản nhưng thực tế, có thể chạy được.

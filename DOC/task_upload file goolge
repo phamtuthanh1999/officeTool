@@ -1,0 +1,122 @@
+Bạn hãy xây dựng chức năng “Convert ảnh sang PDF và lưu vào Google Drive khi đăng nhập bằng Google”.
+
+## 🎯 Mục tiêu
+
+* User đăng nhập bằng Google
+* User upload ảnh → convert thành PDF
+* File PDF được lưu vào Google Drive của user
+* Trả về link file đã lưu
+
+---
+
+## 🔁 Luồng xử lý
+
+### 1. Đăng nhập Google
+
+* User bấm “Login with Google”
+* Redirect đến Google OAuth
+* Nhận về:
+
+  * access_token
+  * refresh_token (nếu có)
+* Lưu token tạm thời (trong session hoặc memory)
+
+---
+
+### 2. Upload & Convert
+
+1. Nhận nhiều ảnh (jpg/png)
+2. Validate:
+
+   * đúng định dạng
+   * kích thước hợp lệ
+3. Convert ảnh → PDF:
+
+   * mỗi ảnh 1 trang
+   * giữ tỉ lệ
+4. Tạo file PDF hoàn chỉnh
+
+---
+
+### 3. Upload lên Google Drive
+
+1. Dùng access_token gọi Google Drive API
+2. Upload file PDF
+3. Set quyền:
+
+   * private (mặc định)
+   * hoặc public (nếu cần)
+4. Nhận:
+
+   * fileId
+   * link truy cập
+
+---
+
+### 4. Trả kết quả
+
+Response:
+{
+"success": true,
+"file": {
+"name": "output.pdf",
+"driveLink": "https://drive.google.com/..."
+}
+}
+
+---
+
+## ⚙️ Yêu cầu
+
+* Viết đầy đủ logic:
+
+  * Google OAuth
+  * xử lý token
+  * convert PDF
+  * upload Google Drive
+* Code rõ ràng, có comment
+
+---
+
+## 🧩 Các phần cần tách
+
+* auth (Google login)
+* convert service (img → pdf)
+* drive service (upload file)
+
+---
+
+## ⚠️ Xử lý lỗi
+
+* user không cấp quyền Drive
+* token hết hạn
+* upload thất bại
+* file lỗi
+
+---
+
+## ⚡ Tối ưu (nếu có thể)
+
+* Refresh token khi hết hạn
+* Upload dạng stream (không lưu local)
+* Giới hạn số ảnh
+
+---
+
+## 📤 Output
+
+* API hoàn chỉnh:
+
+  * login Google
+  * upload ảnh
+  * convert PDF
+  * upload Drive
+* Có ví dụ response
+
+---
+
+## ❗ Lưu ý
+
+
+
+Hãy viết code đầy đủ từ đầu đến cuối.

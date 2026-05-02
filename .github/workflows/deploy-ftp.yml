@@ -1,0 +1,51 @@
+name: Deploy MNG API to cPanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Skip install/build (deploy prebuilt artifacts)
+        run: |
+          echo "Skipping install & build — deploying prebuilt files (dist)"
+          : "${DEPLOY_DIR:=dist}"
+          if [ ! -d "$DEPLOY_DIR" ]; then
+            echo "Deploy directory '$DEPLOY_DIR' not found — ensure build artifacts exist in the repo or are committed."
+            ls -la
+            exit 1
+          else
+            echo "Found $DEPLOY_DIR:" && ls -la "$DEPLOY_DIR"
+          fi
+        shell: bash
+
+      - name: Prepare staging directory
+        run: |
+          mkdir -p staging
+          # Copy compiled code into staging root (copy contents, not the dist folder)
+          cp -a dist/. staging/
+          cp package.json package-lock.json staging/ || true
+          mkdir -p staging/tmp && touch staging/tmp/restart.txt
+
+      - name: Deploy via FTP (cPanel)
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          port: ${{ secrets.FTP_PORT }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./staging/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/*.map
