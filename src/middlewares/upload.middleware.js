@@ -60,4 +60,36 @@ const uploadMultipleImages = (req, res, next) => {
   uploadImage.array('images', 20)(req, res, (err) => handleMulterError(err, next));
 };
 
-module.exports = { uploadSingleImage, uploadMultipleImages };
+/**
+ * Multer instance cho convert — chấp nhận mọi loại file, tối đa 50MB/file
+ */
+const uploadConvertRaw = multer({
+  storage,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB
+    files: 10,
+  },
+});
+
+const handleConvertMulterError = (err, next) => {
+  if (!err) return next();
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return next(new AppError('Kích thước file quá lớn. Tối đa 50MB mỗi file.', 400));
+  }
+  if (err.code === 'LIMIT_FILE_COUNT') {
+    return next(new AppError('Quá nhiều file. Tối đa 10 file mỗi lần.', 400));
+  }
+  if (err instanceof multer.MulterError) {
+    return next(new AppError(`Lỗi upload file: ${err.message}`, 400));
+  }
+  return next(err);
+};
+
+/**
+ * Middleware upload nhiều file để convert (field "files", tối đa 10 file, 50MB/file)
+ */
+const uploadConvertFiles = (req, res, next) => {
+  uploadConvertRaw.array('files', 10)(req, res, (err) => handleConvertMulterError(err, next));
+};
+
+module.exports = { uploadSingleImage, uploadMultipleImages, uploadConvertFiles };
