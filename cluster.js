@@ -18,11 +18,12 @@ const logger = require('./src/config/logger');
 
 const detectedCPUs = os.cpus().length;
 // Allow runtime override with MAX_WORKERS env var. Default to a safe cap.
-const DEFAULT_MAX_WORKERS = 8;
+// Shared hosting: keep workers low to stay within process quota (50 total / 20 entry).
+const DEFAULT_MAX_WORKERS = 2;
 const maxWorkersEnv = parseInt(process.env.MAX_WORKERS || '', 10);
 // Hard cap to avoid runaway forks (can be overridden with MAX_WORKERS_CAP or MAX_WORKERS_HARD)
 const hardCapEnv = parseInt(process.env.MAX_WORKERS_CAP || process.env.MAX_WORKERS_HARD || '', 10);
-const DEFAULT_HARD_CAP = 16;
+const DEFAULT_HARD_CAP = 4;
 let numCPUs;
 if (Number.isFinite(maxWorkersEnv) && maxWorkersEnv > 0) {
   numCPUs = Math.min(detectedCPUs, maxWorkersEnv);
@@ -32,8 +33,9 @@ if (Number.isFinite(maxWorkersEnv) && maxWorkersEnv > 0) {
 const hardCap = Number.isFinite(hardCapEnv) && hardCapEnv > 0 ? hardCapEnv : DEFAULT_HARD_CAP;
 
 // Respect a process-level limit if provided (e.g., cPanel total process quota).
-const processLimitEnv = parseInt(process.env.PROCESS_LIMIT || '', 10);
-const reservedSlots = parseInt(process.env.RESERVED_PROCESS_SLOTS || '2', 10);
+// Default PROCESS_LIMIT to 50 to match shared hosting quota.
+const processLimitEnv = parseInt(process.env.PROCESS_LIMIT || '50', 10);
+const reservedSlots = parseInt(process.env.RESERVED_PROCESS_SLOTS || '5', 10);
 if (Number.isFinite(processLimitEnv) && processLimitEnv > reservedSlots) {
   const maxWorkersByProcessLimit = Math.max(1, processLimitEnv - reservedSlots);
   if (numCPUs > maxWorkersByProcessLimit) {
