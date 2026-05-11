@@ -4,7 +4,7 @@
   "description": "Production-ready Node.js REST API with Express, MySQL, JWT, clustering",
   "main": "cluster.js",
   "scripts": {
-    "start": "node cluster.js",
+    "start": "node src/app.js",
     "dev": "nodemon src/app.js",
     "build": "node scripts/build.js",
     "lint": "eslint src --ext .js",
@@ -32,6 +32,7 @@
     "morgan": "^1.10.0",
     "multer": "^2.1.1",
     "mysql2": "^3.10.0",
+    "pdf-lib": "^1.17.1",
     "pdfkit": "^0.18.0",
     "sharp": "^0.34.5",
     "swagger-jsdoc": "^6.2.8",

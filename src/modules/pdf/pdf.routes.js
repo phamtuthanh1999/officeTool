@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const pdfController = require('./pdf.controller');
-const { uploadMultipleImages } = require('../../middlewares/upload.middleware');
+const { uploadMultipleImages, uploadPdfSignFields } = require('../../middlewares/upload.middleware');
+const { protect } = require('../../middlewares/auth.middleware');
 
 const router = Router();
 
@@ -69,5 +70,47 @@ const router = Router();
  *                 message: { type: string, example: Lỗi khi tạo PDF. }
  */
 router.post('/images-to-pdf', uploadMultipleImages, pdfController.imagesToPdf);
+
+/**
+ * @openapi
+ * /api/v1/pdf/sign:
+ *   post:
+ *     tags: [PDF]
+ *     summary: Ký số PDF (nhúng ảnh chữ ký vào trang PDF)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required: [pdf, signature]
+ *             properties:
+ *               pdf:
+ *                 type: string
+ *                 format: binary
+ *               signature:
+ *                 type: string
+ *                 format: binary
+ *               page:
+ *                 type: string
+ *                 default: last
+ *               position:
+ *                 type: string
+ *                 default: bottom-right
+ *               sigWidth:
+ *                 type: integer
+ *                 default: 160
+ *     responses:
+ *       200:
+ *         description: File PDF đã ký
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+router.post('/sign', protect, uploadPdfSignFields, pdfController.signPdfHandler);
 
 module.exports = router;
